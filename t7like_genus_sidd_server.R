@@ -145,3 +145,10 @@ phages_with_spec_letters <- all_Autographivirinae_seqs[which(sapply(letters_tabl
 letters_tables[which(sapply(letters_tables, length)>4)]
 '%!in%' <- function(x,y)!('%in%'(x,y))
 lapply(phages_with_spec_letters, function(x) {which(x%!in%c('A', 'C', 'G', 'T'))})
+
+all_Autographivirinae_hosts <- sub("(.*?) p.*", "\\1", all_Autographivirinae_names)
+all_Autographivirinae_hosts <- sub(".* (.*?)", "\\1", all_Autographivirinae_hosts)
+cols_hosts <- as.numeric(factor(all_Autographivirinae_hosts))
+barplot((as.numeric(lapply(all_Autographivirinae_seqs, GC))), col = cols_hosts, ylim = c(-0.1, 0.65))
+abline(h=0.5)
+legend('bottom', ncol = 5, legend = unique(all_Autographivirinae_hosts), fill = cols_hosts, cex = 0.5)
