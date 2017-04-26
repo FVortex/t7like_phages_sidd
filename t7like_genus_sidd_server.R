@@ -1,6 +1,6 @@
 #all in one directory
 
-wd <- getwd()
+wd <- "/home/hp/t7like_phages_sidd/"
 
 library(RCurl)
 library(seqinr)
@@ -51,7 +51,8 @@ all_Autographivirinae_seqs[[i]]<- seqs
 #####names(all_Autographivirinae_seqs[[i]]) <- names(all_Autographivirinae_seqs[[i]])[1]
 #  #unlist(as.character(seqs)[which.max(lapply(as.character(seqs), length))])
 }
-names(all_Autographivirinae_seqs) <- all_Autographivirinae_names
+all_Autographivirinae_names <- gsub(' ', '_', all_Autographivirinae_names)
+names(all_Autographivirinae_seqs) <- gsub(' ', '_', all_Autographivirinae_names)
 all_Autographivirinae_seqs <- lapply(all_Autographivirinae_seqs, toupper)
 #This is really simple with Entrez Direct
 #lapply(all_Autographivirinae_seqs, length)
@@ -76,34 +77,37 @@ for (i in seq_along(all_Autographivirinae_seqs)) {
 
 phages_chunks<-sort(grep(pattern = '*_by_chunks$', ls(), value = T))
 #t7chunks<-splitWithOverlap(t7gb, 10000, 2000)
+lapply(phages_chunks, function(x) {str(get(x))})
+
 
 #t7chunks<-splitWithOverlap(seq_along(t7gb), 10000, 2000)
 
 dirs <- c('phages_by_10kbp_chunks', 'phages_by_10kbp_sidd')
 
 for (i in dirs) {
-  if (file.exists(paste0(wd, i))) {
-    unlink(paste0(wd, i), recursive = T)
+  if (file.exists(paste0(wd, '/', i))) {
+    # #unlink(paste0(wd, '/', i), recursive = T)
   } else {
-    dir.create(paste0(wd, i))  
+    dir.create(paste0(wd, '/', i))  
   }
 }
 
 
 for (i in phages_chunks) {
   for (j in seq_along(get(i))) {
-    write.fasta(get(i)[[j]], names = NULL, file.out = paste0(wd, '/phages_by_10kbp_chunks/', i, '_', j))
+    write.fasta(get(i)[[j]], names = NULL, file.out = paste0(wd, 'phages_by_10kbp_chunks/', i, '_', j))
   }
 }
 
+phages_chunks
 
 for (i in phages_chunks) {
   for (j in seq_along(get(i))) {
     # #aa<-as.character(read.fasta(paste0(wd, '/t7_genome_parts_string/', i), as.string = T, set.attributes = F))
     # #print(substr(aa, nchar(aa)-1000-10, nchar(aa)-1000+1))
-    system(paste0('cd ', wd, '/sist/
+    system(paste0('cd ', wd, 'sist/
                   ',
-                  'perl -X master.pl -a M -f ', wd, '/phages_by_10kbp_chunks/', i, '_', j, ' -o /home/mikhail/Documents/t7/phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
+                  'perl -X master.pl -a M -f ', wd, 'phages_by_10kbp_chunks/', i, '_', j, ' -o' , wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
   }
 }
 #phages_chunks <- phages_chunks[-c(2,5)]
@@ -134,3 +138,10 @@ for (i in phages_chunks) {
   } 
   assign(paste0(i, '_sidd'), interm)
 }
+
+#letters check-up
+letters_tables <- lapply(all_Autographivirinae_seqs, function (x) {table(unlist(x))})
+phages_with_spec_letters <- all_Autographivirinae_seqs[which(sapply(letters_tables, length)>4)]
+letters_tables[which(sapply(letters_tables, length)>4)]
+'%!in%' <- function(x,y)!('%in%'(x,y))
+lapply(phages_with_spec_letters, function(x) {which(x%!in%c('A', 'C', 'G', 'T'))})
