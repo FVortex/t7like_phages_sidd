@@ -118,19 +118,19 @@ for (i in phages_chunks) {
   for (j in seq_along(get(i))) {
     print(j)
     if (j==1) {
-      touch<-read.csv(paste0(wd, '/phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'), sep = '\t', skip = 1)
+      touch<-read.csv(paste0(wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'), sep = '\t', skip = 1)
       touch<-touch[-(9001:10000),]
     }
     else if (j==length(get(i))){
       
-      if(i=="k11gbchunks") { touch<-read.csv(paste0(wd, '/phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'), sep = '\t', skip = 1)  #skipping needed since warnong message 'sequence if too short' is present
+      if(i=="k11gbchunks") { touch<-read.csv(paste0(wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'), sep = '\t', skip = 1)  #skipping needed since warnong message 'sequence if too short' is present
       } else {
-        touch<-read.csv(paste0(wd, '/phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'), sep = '\t')
+        touch<-read.csv(paste0(wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'), sep = '\t', skip = 1)
         touch<-touch[-(1:1000),]
       }
     }
     else{
-      touch<-read.csv(paste0(wd, '/phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'),sep = '\t', skip=1)
+      touch<-read.csv(paste0(wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'),sep = '\t', skip=1)
       touch<-touch[-c(1:1000, 9001:10000),]
     } #warnings omitting
     interm<-rbind(interm, as.matrix(touch))
@@ -138,6 +138,54 @@ for (i in phages_chunks) {
   } 
   assign(paste0(i, '_sidd'), interm)
 }
+
+#plots
+
+phages_sidds<-(grep(pattern = '*_by_chunks_sidd', ls(), value = T))
+
+
+phiOLs_coords<-c(353+17, ##353..375#ba14
+                 479+17, #479..501 #k11 
+                 413+17, # 423..445 #13a 
+                 
+                 375+17, #nuccore says 375..397 fo phiYe03-12, TSS at 392 (?) 
+                 NA, #SP6 lacks
+                 366+17, #nuccore 366..388, TSS at 383 for t3
+                 405, #t7
+                 644+17)   ##644..666) #TSS is explicit for t7#yepe2 
+#ba14 353+17 ##353..375
+#k11 479+17 #479..501
+#13a 413+17 # 423..445
+
+#yepe2 644+17   ##644..666
+
+phiORs_coords<-c(39073+17,   ##39073..39095 #ba14 
+                 
+                 40503+17, #40503..40525 #k11  
+                 38159+17, # 38159..38181 #13a
+                 38797+17, #38797..38819 phi...
+                 NA, #sp6
+                 37432+17, # 37432..37454 t3
+                 39229, #t7
+                 37717+17) #37717..37739)#yepe2
+#ba14 39073+17   ##39073..39095
+#k11 40503+17 #40503..40525
+#13a  38159+17 # 38159..38181
+
+#yepe2 37717+17 #37717..37739
+
+names(phiOLs_coords) <- paste0(phages, '_phiols_coord')
+names(phiORs_coords) <- paste0(phages, '_phiors_coord')
+
+par(mar=c(0,0,0,0))
+par(oma=c(0,0,0,0))
+par(mfrow=c(7,7))
+for (i in seq_along(phages_sidds)){
+  plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
+  abline(h=0.5, col='grey', lty=3)
+  # #abline(v=c(phiOLs_coords[i], phiORs_coords[i]), col='red')
+}
+
 
 #letters check-up
 letters_tables <- lapply(all_Autographivirinae_seqs, function (x) {table(unlist(x))})
@@ -152,3 +200,5 @@ cols_hosts <- as.numeric(factor(all_Autographivirinae_hosts))
 barplot((as.numeric(lapply(all_Autographivirinae_seqs, GC))), col = cols_hosts, ylim = c(-0.1, 0.65))
 abline(h=0.5)
 legend('bottom', ncol = 5, legend = unique(all_Autographivirinae_hosts), fill = cols_hosts, cex = 0.5)
+
+#plots
