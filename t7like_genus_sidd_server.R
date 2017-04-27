@@ -107,7 +107,7 @@ for (i in phages_chunks) {
     # #print(substr(aa, nchar(aa)-1000-10, nchar(aa)-1000+1))
     system(paste0('cd ', wd, 'sist/
                   ',
-                  'perl -X master.pl -a M -f ', wd, 'phages_by_10kbp_chunks/', i, '_', j, ' -o' , wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
+                  'perl -X master.pl -a M -f ', wd, 'phages_by_10kbp_chunks/', i, '_', j, ' -o ' , wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
   }
 }
 #phages_chunks <- phages_chunks[-c(2,5)]
