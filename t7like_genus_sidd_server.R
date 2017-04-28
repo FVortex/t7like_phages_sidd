@@ -57,7 +57,63 @@ all_Autographivirinae_seqs <- lapply(all_Autographivirinae_seqs, toupper)
 #This is really simple with Entrez Direct
 #lapply(all_Autographivirinae_seqs, length)
 ##system('epost -db taxonomy -id 10759 | elink -target nuccore | efetch -format uid')
+phages_with_phiols <- c('ba14', 'k11', '13a', 'phiYeO3',  't3', 't7', 'yepe2')
+all_Autographivirinae_names[grepl(paste(phages_with_phiols, collapse="|"), all_Autographivirinae_names, ignore.case = T)]
+#need to substitute T7, T3 and phiYeO3-12 genomes with used previously
+##phages that DO contain phiols
+library(ape)
 
+t7gb<-read.GenBank(access.nb = 'NC_001604', as.character = T) #Group I: dsDNA viruses Order: 	Caudovirales Family: 	Podoviridae Subfamily: 	Autographivirinae Genus: T7likevirus
+t7gb<-t7gb$NC_001604
+#substitution
+no <- which(grepl(paste('t7,', collapse="|"), all_Autographivirinae_names, ignore.case = T))
+all_Autographivirinae_seqs[[no]] <- t7gb
+names(all_Autographivirinae_seqs[no]) <- "NC_001604 Enterobacteria phage T7, complete genome"
+
+
+t3gb<-read.GenBank(access.nb = 'NC_003298', as.character = T) #wikipedia Group: 	Group I (dsDNA) Order: 	CaudoviralesFamily: 	PodoviridaGenus: 	T7-like virusesSpecies: 	T3 phage
+t3gb<-t3gb$NC_003298
+
+no <- which(grepl(paste('t3,', collapse="|"), all_Autographivirinae_names, ignore.case = T))
+all_Autographivirinae_seqs[[no]] <- t3gb
+names(all_Autographivirinae_seqs[no]) <- "NC_003298 Enterobacteria phage T3, complete genome" 
+
+phiYeO3_12gb<-read.GenBank(access.nb = 'NC_001271', as.character = T) # Based on its morphology, φYeO3-12 belongs to the family Podoviridae (25) and to type C in Bradley's classification (12); furthermore, it resembles a typical member of the T7 group (H.-W. Ackermann, personal communication) (1). Other Y. enterocolitica phages characterized to date by electron microscopy have been of type A in Bradley's classification (22) or have been classified into the families Myoviridae or Podoviridae (2). ------------ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC94659/
+phiYeO3_12gb<-phiYeO3_12gb$NC_001271 
+
+
+no <- which(grepl(paste('phiYeO3-12,', collapse="|"), all_Autographivirinae_names, ignore.case = T))
+all_Autographivirinae_seqs[[no]] <- phiYeO3_12gb
+names(all_Autographivirinae_seqs[no]) <- "NC_003298_Enterobacteria_phage_T3,_complete_genome" 
+
+#and adding 4 more phages
+phage13a_gb<-read.GenBank(access.nb = 'NC_011045.1', as.character = T) # Enterobacteria phage 13a [TAX:532076]Lineage	Viruses; dsDNA viruses,noRNAstage;Caudovirales;Podoviridae;Autographivirinae; T7virus; unclassified T7-like viruses
+phage13a_gb<-phage13a_gb$NC_011045.1
+all_Autographivirinae_seqs[49] <- list(phage13a_gb)
+names(all_Autographivirinae_seqs[49]) <- "NC_011045.1_Enterobacteria_phage_13a,_complete_genome"
+
+ba14gb<-read.GenBank(access.nb = 'NC_011040.1', as.character = T) # Enterobacteria phage BA14 [TAX:532074] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
+ba14gb<-ba14gb$NC_011040.1
+
+all_Autographivirinae_seqs[[50]] <- ba14gb
+names(all_Autographivirinae_seqs[50]) <- "NC_011040.1_Enterobacteria_phage_BA14,_complete_genome"
+
+
+yepe2gb<-read.GenBank(access.nb = 'NC_011038.1', as.character = T) # Yersinia phage Yepe2 [TAX:532078] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
+yepe2gb<-yepe2gb$NC_011038.1
+
+all_Autographivirinae_seqs[[51]] <- yepe2gb
+names(all_Autographivirinae_seqs[51]) <- "NC_011038.1_Yersinia_phage_Yepe2,_complete_genome"
+
+k11gb<-read.GenBank(access.nb = 'EU734173.1', as.character = T) #Klebsiella phage K11 [TAX:532077] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
+k11gb<-k11gb$EU734173.1
+
+all_Autographivirinae_seqs[[52]] <- k11gb
+names(all_Autographivirinae_seqs[52]) <- "EU734173.1_Klebsiella_phage_K11,_complete_genome"
+
+
+all_Autographivirinae_names <- c(all_Autographivirinae_names, "NC_011045.1_Enterobacteria_phage_13a,_complete_genome", "NC_011040.1_Enterobacteria_phage_BA14,_complete_genome","NC_011038.1_Yersinia_phage_Yepe2,_complete_genome", "EU734173.1_Klebsiella_phage_K11,_complete_genome")
+names(all_Autographivirinae_seqs) <- all_Autographivirinae_names
 
 ####Cutting genomes into pieces
 
@@ -105,9 +161,9 @@ for (i in phages_chunks) {
   for (j in seq_along(get(i))) {
     # #aa<-as.character(read.fasta(paste0(wd, '/t7_genome_parts_string/', i), as.string = T, set.attributes = F))
     # #print(substr(aa, nchar(aa)-1000-10, nchar(aa)-1000+1))
-    system(paste0('cd ', wd, 'sist/
-                  ',
-                  'perl -X master.pl -a M -f ', wd, 'phages_by_10kbp_chunks/', i, '_', j, ' -o ' , wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
+  # # #  system(paste0('cd ', wd, 'sist/
+    # # #                ',
+    # # #         'perl -X master.pl -a M -f ', wd, 'phages_by_10kbp_chunks/', i, '_', j, ' -o ' , wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
   }
 }
 #phages_chunks <- phages_chunks[-c(2,5)]
@@ -153,6 +209,8 @@ phiOLs_coords<-c(353+17, ##353..375#ba14
                  366+17, #nuccore 366..388, TSS at 383 for t3
                  405, #t7
                  644+17)   ##644..666) #TSS is explicit for t7#yepe2 
+mean_phiOLs_coords <- mean(phiOLs_coords, na.rm = T)
+range_phiOLs_coords <- range(phiOLs_coords, na.rm = T)
 #ba14 353+17 ##353..375
 #k11 479+17 #479..501
 #13a 413+17 # 423..445
@@ -168,6 +226,41 @@ phiORs_coords<-c(39073+17,   ##39073..39095 #ba14
                  37432+17, # 37432..37454 t3
                  39229, #t7
                  37717+17) #37717..37739)#yepe2
+
+mean_phiOLs_coords <- mean(phiOLs_coords, na.rm = T)
+range_phiOLs_coords <- range(phiOLs_coords, na.rm = T)
+
+phages_with_phiols <- c('ba14', 'k11', '13a', 'phiYeO3',  't3', 't7', 'yepe')
+names(all_Autographivirinae_seqs)[grepl(paste(phages_with_phiols, collapse="|"), names(all_Autographivirinae_seqs), ignore.case = T)]
+#need to substitute T7, T3 and phiYeO3-12 genomes with used previously
+##phages that DO contain phiols
+library(ape)
+
+t7gb<-read.GenBank(access.nb = 'NC_001604', as.character = T) #Group I: dsDNA viruses Order: 	Caudovirales Family: 	Podoviridae Subfamily: 	Autographivirinae Genus: T7likevirus
+t7gb<-t7gb$NC_001604
+
+sp6gb<-read.GenBank(access.nb = 'NC_004831', as.character = T) # Family: 	Podoviridae Subfamily: 	AutographivirinaeGenus: 	Sp6likevirus
+sp6gb<-sp6gb$NC_004831
+
+t3gb<-read.GenBank(access.nb = 'NC_003298', as.character = T) #wikipedia Group: 	Group I (dsDNA) Order: 	CaudoviralesFamily: 	PodoviridaGenus: 	T7-like virusesSpecies: 	T3 phage
+t3gb<-t3gb$NC_003298
+
+phiYeO3_12gb<-read.GenBank(access.nb = 'NC_001271', as.character = T) # Based on its morphology, φYeO3-12 belongs to the family Podoviridae (25) and to type C in Bradley's classification (12); furthermore, it resembles a typical member of the T7 group (H.-W. Ackermann, personal communication) (1). Other Y. enterocolitica phages characterized to date by electron microscopy have been of type A in Bradley's classification (22) or have been classified into the families Myoviridae or Podoviridae (2). ------------ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC94659/
+phiYeO3_12gb<-phiYeO3_12gb$NC_001271 
+
+phage13a_gb<-read.GenBank(access.nb = 'NC_011045.1', as.character = T) # Enterobacteria phage 13a [TAX:532076]Lineage	Viruses; dsDNA viruses,noRNAstage;Caudovirales;Podoviridae;Autographivirinae; T7virus; unclassified T7-like viruses
+phage13a_gb<-phage13a_gb$NC_011045.1
+
+ba14gb<-read.GenBank(access.nb = 'NC_011040.1', as.character = T) # Enterobacteria phage BA14 [TAX:532074] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
+ba14gb<-ba14gb$NC_011040.1
+
+yepe2gb<-read.GenBank(access.nb = 'NC_011038.1', as.character = T) # Yersinia phage Yepe2 [TAX:532078] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
+yepe2gb<-yepe2gb$NC_011038.1
+
+k11gb<-read.GenBank(access.nb = 'EU734173.1', as.character = T) #Klebsiella phage K11 [TAX:532077] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
+k11gb<-k11gb$EU734173.1
+
+
 #ba14 39073+17   ##39073..39095
 #k11 40503+17 #40503..40525
 #13a  38159+17 # 38159..38181
@@ -177,15 +270,16 @@ phiORs_coords<-c(39073+17,   ##39073..39095 #ba14
 names(phiOLs_coords) <- paste0(phages, '_phiols_coord')
 names(phiORs_coords) <- paste0(phages, '_phiors_coord')
 
-par(mar=c(0,0,0,0))
-par(oma=c(0,0,0,0))
-par(mfrow=c(7,7))
+svg('SIDD_for_48_phages.svg', height = 12, width = 12)
+par(mar=c(1,0.1,0.1,0.1))
+par(oma=c(0.1,0.1,0.1,0.1))
+par(mfrow=c(5,10))
 for (i in seq_along(phages_sidds)){
   plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
   abline(h=0.5, col='grey', lty=3)
   # #abline(v=c(phiOLs_coords[i], phiORs_coords[i]), col='red')
 }
-
+dev.off()
 
 #letters check-up
 letters_tables <- lapply(all_Autographivirinae_seqs, function (x) {table(unlist(x))})
