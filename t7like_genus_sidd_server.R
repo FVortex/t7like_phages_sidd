@@ -1,5 +1,5 @@
 #all in one directory
-
+rm(list = ls())
 wd <- "/home/hp/t7like_phages_sidd/"
 
 library(RCurl)
@@ -271,15 +271,47 @@ names(phiOLs_coords) <- paste0(phages, '_phiols_coord')
 names(phiORs_coords) <- paste0(phages, '_phiors_coord')
 
 svg('SIDD_for_48_phages.svg', height = 12, width = 12)
-par(mar=c(1,0.1,0.1,0.1))
-par(oma=c(0.1,0.1,0.1,0.1))
-par(mfrow=c(5,10))
+par(mar=c(1,1,1,1))
+par(oma=c(1,1,1,1))
+par(mfrow=c(10,5))
 for (i in seq_along(phages_sidds)){
-  plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
+  #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
+  plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
   abline(h=0.5, col='grey', lty=3)
   # #abline(v=c(phiOLs_coords[i], phiORs_coords[i]), col='red')
 }
 dev.off()
+svg('SIDD_for_48_phages_left_flank.svg', height = 12, width = 12)
+par(mar=c(1,1,1,1))
+par(oma=c(1,1,1,1))
+par(mfrow=c(10,5))
+for (i in seq_along(phages_sidds)){
+  #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
+  plot(get(phages_sidds[i])[1:1000,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
+  abline(h=0.5, col='grey', lty=3)
+  abline(v = mean_phiOLs_coords, lty = 3, col = 'red', lwd= 3)
+  abline(v = range_phiOLs_coords, lty = 3, col = 'red', lwd= 1.5)
+  # #abline(v=c(phiOLs_coords[i], phiORs_coords[i]), col='red')
+}
+dev.off()
+
+svg('SIDD_for_48_phages_right_flank.svg', height = 12, width = 12)
+par(mar=c(1,1,1,1))
+par(oma=c(1,1,1,1))
+par(mfrow=c(10,5))
+for (i in seq_along(phages_sidds)){
+  interv <- (nrow(get(phages_sidds[i]))-1000):nrow(get(phages_sidds[i]))
+  #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
+  plot(get(phages_sidds[i])[interv,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
+  abline(h=0.5, col='grey', lty=3)
+  #abline(v = mean_phiOLs_coords, lty = 3, col = 'red', lwd= 3)
+  #abline(v = range_phiOLs_coords, lty = 3, col = 'red', lwd= 1.5)
+  # #abline(v=c(phiOLs_coords[i], phiORs_coords[i]), col='red')
+}
+dev.off()
+
+
+
 
 #letters check-up
 letters_tables <- lapply(all_Autographivirinae_seqs, function (x) {table(unlist(x))})
