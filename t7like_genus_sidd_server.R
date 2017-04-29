@@ -132,7 +132,7 @@ for (i in seq_along(all_Autographivirinae_seqs)) {
   assign(paste0(all_Autographivirinae_names[[i]], '_by_chunks'), splitWithOverlap(unlist(all_Autographivirinae_seqs[[i]]), 10000, 2000))
 }
 
-phages_chunks<-sort(grep(pattern = '*_by_chunks$', ls(), value = T))[c(1,2,5 ,49:52)]
+phages_chunks<-sort(grep(pattern = '*_by_chunks$', ls(), value = T))#[c(1,2,5 ,49:52)]
 #t7chunks<-splitWithOverlap(t7gb, 10000, 2000)
 lapply(phages_chunks, function(x) {str(get(x))})
 
@@ -207,7 +207,7 @@ phiOLs_coords<-c(353+17, ##353..375#ba14
                  413+17, # 423..445 #13a 
                  
                  375+17, #nuccore says 375..397 fo phiYe03-12, TSS at 392 (?) 
-                 NA, #SP6 lacks
+                 #NA, #SP6 lacks
                  366+17, #nuccore 366..388, TSS at 383 for t3
                 # 405, #t7
                  644+17)   ##644..666) #TSS is explicit for t7#yepe2 
@@ -250,10 +250,10 @@ names(all_Autographivirinae_seqs)[grepl(paste(phages_with_phiols, collapse="|"),
 names(phiOLs_coords) <- paste0(phages, '_phiols_coord')
 names(phiORs_coords) <- paste0(phages, '_phiors_coord')
 
-svg('SIDD_for_48_phages.svg', height = 12, width = 12)
+svg(paste0(wd, 'SIDD_for_48_phages.svg'), height = 12, width = 12)
 par(mar=c(1,1,1,1))
 par(oma=c(1,1,1,1))
-par(mfrow=c(10,5))
+par(mfrow=c(10,12))
 for (i in seq_along(phages_sidds)){
   #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
   plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
@@ -290,22 +290,26 @@ for (i in seq_along(phages_sidds)){
 }
 dev.off()
 
-svg('SIDD_for_48_phages_both_flanks.svg', height = 12, width = 12)
+svg(paste0(wd, 'SIDD_for_48_phages_both_flanks.svg'), height = 12, width = 12)
 par(mar=c(1,1,1,1))
 par(oma=c(1,1,1,1))
-par(mfrow=c(10,10))
+par(mfrow=c(12,12))
+x_to_plot <- 1:2000
+phages_names_to_plot <- sub("(.*?),*", "\\1", all_Autographivirinae_names[1])
+
 for (i in seq_along(phages_sidds)){
   #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
-  plot(get(phages_sidds[i])[1:1000,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5, col = 'darkred')
+  plot(get(phages_sidds[i])[x_to_plot,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5, col = 'darkred')
   abline(h=0.5, col='grey', lty=3)
   abline(v = mean_phiOLs_coords, lty = 3, col = 'red', lwd= 3)
   abline(v = range_phiOLs_coords, lty = 3, col = 'red', lwd= 1.5)
   
-  interv <- (nrow(get(phages_sidds[i]))-1000):nrow(get(phages_sidds[i]))
+  interv <- (nrow(get(phages_sidds[i]))-length(x_to_plot)):nrow(get(phages_sidds[i]))
   #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
   plot(get(phages_sidds[i])[interv,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5 , col = 'darkblue')
   abline(h=0.5, col='grey', lty=3)
-  # #abline(v=c(phiOLs_coords[i], phiORs_coords[i]), col='red')
+  abline(v = length(x_to_plot)-mean_phiORs_coords, lty = 3, col = 'blue', lwd= 3)
+  abline(v = length(x_to_plot)-range_phiORs_coords, lty = 3, col = 'blue', lwd= 1.5)
 }
 dev.off()
 
