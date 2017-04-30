@@ -1,8 +1,8 @@
 #all in one directory
 rm(list = ls())
 wd <- "/home/hp/t7like_phages_sidd/"
+####wd <- '/home/mikhail/Documents/Transcription_origin/t7like_phages_sidd/'
 setwd(wd)
-
 library(RCurl)
 library(seqinr)
 
@@ -52,9 +52,9 @@ for (i in seq_along(taxids)) {
   #####names(all_Autographivirinae_seqs[[i]]) <- names(all_Autographivirinae_seqs[[i]])[1]
   #  #unlist(as.character(seqs)[which.max(lapply(as.character(seqs), length))])
 }
-all_Autographivirinae_names <- gsub(' ', '_', all_Autographivirinae_names)
-names(all_Autographivirinae_seqs) <- gsub(' ', '_', all_Autographivirinae_names)
-all_Autographivirinae_seqs <- lapply(all_Autographivirinae_seqs, toupper)
+#all_Autographivirinae_names <- gsub(' ', '_', all_Autographivirinae_names)
+##names(all_Autographivirinae_seqs) <- gsub(' ', '_', all_Autographivirinae_names)
+##all_Autographivirinae_seqs <- lapply(all_Autographivirinae_seqs, toupper)
 #This is really simple with Entrez Direct
 #lapply(all_Autographivirinae_seqs, length)
 ##system('epost -db taxonomy -id 10759 | elink -target nuccore | efetch -format uid')
@@ -69,7 +69,7 @@ t7gb<-t7gb$NC_001604
 #substitution
 no <- which(grepl(paste('t7,', collapse="|"), all_Autographivirinae_names, ignore.case = T))
 all_Autographivirinae_seqs[[no]] <- t7gb
-names(all_Autographivirinae_seqs[no]) <- "NC_001604 Enterobacteria phage T7, complete genome"
+all_Autographivirinae_names[no] <- "NC_001604 Enterobacteria phage T7, complete genome"
 
 
 t3gb<-read.GenBank(access.nb = 'NC_003298', as.character = T) #wikipedia Group: 	Group I (dsDNA) Order: 	CaudoviralesFamily: 	PodoviridaGenus: 	T7-like virusesSpecies: 	T3 phage
@@ -77,7 +77,7 @@ t3gb<-t3gb$NC_003298
 
 no <- which(grepl(paste('t3,', collapse="|"), all_Autographivirinae_names, ignore.case = T))
 all_Autographivirinae_seqs[[no]] <- t3gb
-names(all_Autographivirinae_seqs[no]) <- "NC_003298 Enterobacteria phage T3, complete genome" 
+all_Autographivirinae_names[no] <- "NC_003298 Enterobacteria phage T3, complete genome" 
 
 phiYeO3_12gb<-read.GenBank(access.nb = 'NC_001271', as.character = T) # Based on its morphology, φYeO3-12 belongs to the family Podoviridae (25) and to type C in Bradley's classification (12); furthermore, it resembles a typical member of the T7 group (H.-W. Ackermann, personal communication) (1). Other Y. enterocolitica phages characterized to date by electron microscopy have been of type A in Bradley's classification (22) or have been classified into the families Myoviridae or Podoviridae (2). ------------ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC94659/
 phiYeO3_12gb<-phiYeO3_12gb$NC_001271 
@@ -85,37 +85,39 @@ phiYeO3_12gb<-phiYeO3_12gb$NC_001271
 
 no <- which(grepl(paste('phiYeO3-12,', collapse="|"), all_Autographivirinae_names, ignore.case = T))
 all_Autographivirinae_seqs[[no]] <- phiYeO3_12gb
-names(all_Autographivirinae_seqs[no]) <- "NC_003298_Enterobacteria_phage_T3,_complete_genome" 
+all_Autographivirinae_names[no] <- "NC_001271_Yersinia_phage_phiYeO3-12,_complete_genome" 
 
 #and adding 4 more phages
 phage13a_gb<-read.GenBank(access.nb = 'NC_011045.1', as.character = T) # Enterobacteria phage 13a [TAX:532076]Lineage	Viruses; dsDNA viruses,noRNAstage;Caudovirales;Podoviridae;Autographivirinae; T7virus; unclassified T7-like viruses
 phage13a_gb<-phage13a_gb$NC_011045.1
 all_Autographivirinae_seqs[49] <- list(phage13a_gb)
-names(all_Autographivirinae_seqs[49]) <- "NC_011045.1_Enterobacteria_phage_13a,_complete_genome"
+all_Autographivirinae_names[49] <- "NC_011045.1_Enterobacteria_phage_13a,_complete_genome"
 
 ba14gb<-read.GenBank(access.nb = 'NC_011040.1', as.character = T) # Enterobacteria phage BA14 [TAX:532074] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
 ba14gb<-ba14gb$NC_011040.1
 
 all_Autographivirinae_seqs[[50]] <- ba14gb
-names(all_Autographivirinae_seqs[50]) <- "NC_011040.1_Enterobacteria_phage_BA14,_complete_genome"
+all_Autographivirinae_names[50] <- "NC_011040.1_Enterobacteria_phage_BA14,_complete_genome"
 
 
 yepe2gb<-read.GenBank(access.nb = 'NC_011038.1', as.character = T) # Yersinia phage Yepe2 [TAX:532078] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
 yepe2gb<-yepe2gb$NC_011038.1
 
 all_Autographivirinae_seqs[[51]] <- yepe2gb
-names(all_Autographivirinae_seqs[51]) <- "NC_011038.1_Yersinia_phage_Yepe2,_complete_genome"
+all_Autographivirinae_names[51] <- "NC_011038.1_Yersinia_phage_Yepe2,_complete_genome"
 
 k11gb<-read.GenBank(access.nb = 'EU734173.1', as.character = T) #Klebsiella phage K11 [TAX:532077] 	Viruses; dsDNA viruses, no RNA stage; Caudovirales;Podoviridae; Autographivirinae; T7virus;unclassified T7-like viruses
 k11gb<-k11gb$EU734173.1
 
 all_Autographivirinae_seqs[[52]] <- k11gb
-names(all_Autographivirinae_seqs[52]) <- "EU734173.1_Klebsiella_phage_K11,_complete_genome"
+all_Autographivirinae_names[52] <- "EU734173.1_Klebsiella_phage_K11,_complete_genome"
 
 
-all_Autographivirinae_names <- c(all_Autographivirinae_names, "NC_011045.1_Enterobacteria_phage_13a,_complete_genome", "NC_011040.1_Enterobacteria_phage_BA14,_complete_genome","NC_011038.1_Yersinia_phage_Yepe2,_complete_genome", "EU734173.1_Klebsiella_phage_K11,_complete_genome")
+#all_Autographivirinae_names <- c(all_Autographivirinae_names, "NC_011045.1_Enterobacteria_phage_13a,_complete_genome", "NC_011040.1_Enterobacteria_phage_BA14,_complete_genome","NC_011038.1_Yersinia_phage_Yepe2,_complete_genome", "EU734173.1_Klebsiella_phage_K11,_complete_genome")
+
+all_Autographivirinae_names <- gsub(' ', '_', all_Autographivirinae_names)
 names(all_Autographivirinae_seqs) <- all_Autographivirinae_names
-
+all_Autographivirinae_seqs <- lapply(all_Autographivirinae_seqs, toupper)
 ####Cutting genomes into pieces
 
 #fucntion to split
@@ -130,6 +132,7 @@ splitWithOverlap <- function(vec, seg.length, overlap) {
 # replacement + adding of old genomes [c(1,2,5 ,49:52)]
 for (i in seq_along(all_Autographivirinae_seqs)) {
   assign(paste0(all_Autographivirinae_names[[i]], '_by_chunks'), splitWithOverlap(unlist(all_Autographivirinae_seqs[[i]]), 10000, 2000))
+  print(paste(i, 'Assigning', all_Autographivirinae_names[[i]]))
 }
 
 phages_chunks<-sort(grep(pattern = '*_by_chunks$', ls(), value = T))#[c(1,2,5 ,49:52)]
@@ -143,7 +146,7 @@ dirs <- c('phages_by_10kbp_chunks', 'phages_by_10kbp_sidd')
 
 for (i in dirs) {
   if (file.exists(paste0(wd, '/', i))) {
-    # #unlink(paste0(wd, '/', i), recursive = T)
+    unlink(paste0(wd, '/', i), recursive = T)
   } else {
     dir.create(paste0(wd, '/', i))  
   }
@@ -164,8 +167,8 @@ for (i in phages_chunks) {
     # #aa<-as.character(read.fasta(paste0(wd, '/t7_genome_parts_string/', i), as.string = T, set.attributes = F))
     # #print(substr(aa, nchar(aa)-1000-10, nchar(aa)-1000+1))
       system(paste0('cd ', wd, 'sist/
-                    ',
-             'perl -X master.pl -a M -f ', wd, 'phages_by_10kbp_chunks/', i, '_', j, ' -o ' , wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
+                   ',
+          'perl -X master.pl -a M -f ', wd, 'phages_by_10kbp_chunks/', i, '_', j, ' -o ' , wd, 'phages_by_10kbp_sidd/Perl_sist_output_', i, 'no_', j, '.tsv'))
   }
 }
 #phages_chunks <- phages_chunks[-c(2,5)]
@@ -290,23 +293,24 @@ for (i in seq_along(phages_sidds)){
 }
 dev.off()
 
-svg(paste0(wd, 'SIDD_for_48_phages_both_flanks.svg'), height = 12, width = 12)
+svg(paste0(wd, 'SIDD_for_52_phages_both_flanks.svg'), height = 12, width = 12)
 par(mar=c(1,1,1,1))
 par(oma=c(1,1,1,1))
 par(mfrow=c(12,12))
 x_to_plot <- 1:2000
-phages_names_to_plot <- sub("(.*?),*", "\\1", all_Autographivirinae_names[1])
-
+phages_names_to_plot <- sub("(.*?)*phage_*", "", all_Autographivirinae_names)
+phages_names_to_plot <- sub("\\,.*", "", phages_names_to_plot)
+sub("*\\.[0-9]", "", a)
 for (i in seq_along(phages_sidds)){
   #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
-  plot(get(phages_sidds[i])[x_to_plot,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5, col = 'darkred')
+  plot(get(phages_sidds[i])[x_to_plot,2], type='l', ylim=c(0,1), main = phages_names_to_plot[i], ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5, col = 'darkred')
   abline(h=0.5, col='grey', lty=3)
   abline(v = mean_phiOLs_coords, lty = 3, col = 'red', lwd= 3)
   abline(v = range_phiOLs_coords, lty = 3, col = 'red', lwd= 1.5)
   
   interv <- (nrow(get(phages_sidds[i]))-length(x_to_plot)):nrow(get(phages_sidds[i]))
   #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
-  plot(get(phages_sidds[i])[interv,2], type='l', ylim=c(0,1), main = toupper(all_Autographivirinae_names[i]), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5 , col = 'darkblue')
+  plot(get(phages_sidds[i])[interv,2], type='l', ylim=c(0,1), main = phages_names_to_plot[i], ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5 , col = 'darkblue')
   abline(h=0.5, col='grey', lty=3)
   abline(v = length(x_to_plot)-mean_phiORs_coords, lty = 3, col = 'blue', lwd= 3)
   abline(v = length(x_to_plot)-range_phiORs_coords, lty = 3, col = 'blue', lwd= 1.5)
@@ -330,4 +334,14 @@ barplot((as.numeric(lapply(all_Autographivirinae_seqs, GC))), col = cols_hosts, 
 abline(h=0.5)
 legend('bottom', ncol = 5, legend = unique(all_Autographivirinae_hosts), fill = cols_hosts, cex = 0.5)
 
-#plots
+#to count peaks numbers
+intersect.points<- list()
+for (i in phages_sidds) {
+  # Find points where x1 is above x2.
+  above<-get(i)[,2]>0.5
+  # Points always intersect when above=TRUE, then FALSE or reverse
+  intersect.points[[i]]<-which(diff(above)!=0)
+}
+
+all_Autographivirinae_peaks_above0.5_numbers <- (sapply(intersect.points, length)/2)
+barplot(all_Autographivirinae_peaks_above0.5_numbers)
