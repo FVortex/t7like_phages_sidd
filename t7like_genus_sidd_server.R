@@ -1,7 +1,8 @@
 #all in one directory
 rm(list = ls())
-wd <- "/home/hp/t7like_phages_sidd/"
-####wd <- '/home/mikhail/Documents/Transcription_origin/t7like_phages_sidd/'
+####wd <- "/home/hp/t7like_phages_sidd/"
+####
+wd <- '/home/mikhail/Documents/Transcription_origin/t7like_phages_sidd/'
 setwd(wd)
 library(RCurl)
 library(seqinr)
@@ -146,7 +147,7 @@ dirs <- c('phages_by_10kbp_chunks', 'phages_by_10kbp_sidd')
 
 for (i in dirs) {
   if (file.exists(paste0(wd, '/', i))) {
-    unlink(paste0(wd, '/', i), recursive = T)
+    #unlink(paste0(wd, '/', i), recursive = T)
   } else {
     dir.create(paste0(wd, '/', i))  
   }
@@ -296,21 +297,21 @@ dev.off()
 svg(paste0(wd, 'SIDD_for_52_phages_both_flanks.svg'), height = 12, width = 12)
 par(mar=c(1,1,1,1))
 par(oma=c(1,1,1,1))
-par(mfrow=c(12,12))
+par(mfrow=c(10,11))
 x_to_plot <- 1:2000
-phages_names_to_plot <- sub("(.*?)*phage_*", "", all_Autographivirinae_names)
+phages_names_to_plot <- sub("(.*?)*phage_*", "", phages_sidds)
 phages_names_to_plot <- sub("\\,.*", "", phages_names_to_plot)
-sub("*\\.[0-9]", "", a)
+
 for (i in seq_along(phages_sidds)){
   #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
-  plot(get(phages_sidds[i])[x_to_plot,2], type='l', ylim=c(0,1), main = phages_names_to_plot[i], ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5, col = 'darkred')
+  plot(get(phages_sidds[i])[x_to_plot,2], type='l', ylim=c(0,1), main = phages_names_to_plot[i], ylab='Opening probability', xlab='', xaxt = 'n', lwd=1.5, col = 'darkred')
   abline(h=0.5, col='grey', lty=3)
   abline(v = mean_phiOLs_coords, lty = 3, col = 'red', lwd= 3)
   abline(v = range_phiOLs_coords, lty = 3, col = 'red', lwd= 1.5)
   
   interv <- (nrow(get(phages_sidds[i]))-length(x_to_plot)):nrow(get(phages_sidds[i]))
   #plot(get(phages_sidds[i])[,2], type='l', ylim=c(0,1), main=paste0('SIDD profile for complete ', ' ',  toupper(all_Autographivirinae_names[i]), ' ', ' DNA'), ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5)
-  plot(get(phages_sidds[i])[interv,2], type='l', ylim=c(0,1), main = phages_names_to_plot[i], ylab='Opening probability', xlab='Sequence (nts)', lwd=1.5 , col = 'darkblue')
+  plot(get(phages_sidds[i])[interv,2], type='l', ylim=c(0,1), main = phages_names_to_plot[i], ylab='Opening probability', xlab='', xaxt = 'n', lwd=1.5 , col = 'darkblue')
   abline(h=0.5, col='grey', lty=3)
   abline(v = length(x_to_plot)-mean_phiORs_coords, lty = 3, col = 'blue', lwd= 3)
   abline(v = length(x_to_plot)-range_phiORs_coords, lty = 3, col = 'blue', lwd= 1.5)
